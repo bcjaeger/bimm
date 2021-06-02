@@ -1,0 +1,28 @@
+Package: bimm
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: 
+    c(person(given = "Byron",
+             family = "Jaeger",
+             role = c("aut", "cre"),
+             email = "bcjaeger@uab.edu",
+             comment = c(ORCID = "0000-0001-7399-2299")))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    stats,
+    lme4,
+    ranger,
+    data.table
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
