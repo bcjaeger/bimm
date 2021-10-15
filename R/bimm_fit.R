@@ -107,6 +107,7 @@ bimm_fit <- function(data,
                      formula,
                      verbose,
                      n_iteration,
+                     epsilon = 1e-2,
                      fun_model_ml = NULL,
                      fun_model_mer = NULL,
                      fun_pred_ml = NULL,
@@ -121,7 +122,9 @@ bimm_fit <- function(data,
                            fun_pred_ml = fun_pred_ml,
                            fun_pred_mer = fun_pred_mer)
 
-  bimm_iterate(data_train = data, object = bimm_object)
+  bimm_iterate(data_train = data,
+               object = bimm_object,
+               epsilon = epsilon)
 
 }
 

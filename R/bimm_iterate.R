@@ -4,7 +4,8 @@ bimm_iterate <- function(data_train,
                          data_test = NULL,
                          object,
                          keep_model_mer = TRUE,
-                         keep_model_ml = TRUE) {
+                         keep_model_ml = TRUE,
+                         epsilon) {
 
   # convert the outcome column in the training data to the most
   # recent pseudo-outcome in the bimm training process.
@@ -94,6 +95,18 @@ bimm_iterate <- function(data_train,
       as.numeric(stats::logLik(object$model_mer))
 
 
+    if(object$iteration_current > 1){
+
+      ll_ratio <-
+        object$history$loglik[object$iteration_current] /
+        object$history$loglik[object$iteration_current-1]
+
+      if(abs(1 - ll_ratio) < epsilon){
+        if(object$verbose) message("Loglik converged! Stopping early")
+        break
+      }
+
+    }
 
     mer_probs <- object$fun_pred_mer(model = object$model_mer,
                                      new_data = data_train)

@@ -76,7 +76,8 @@ bimm_cv <- function(data,
                      data_test = data[test_index[[fold]], ],
                      object = models[[fold]],
                      keep_model_mer = FALSE,
-                     keep_model_ml = FALSE)
+                     keep_model_ml = FALSE,
+                     epsilon = 0)
 
     }
 
