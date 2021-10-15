@@ -109,3 +109,29 @@ print.bimm_object <- function(x, ...){
   print(x$history)
 
 }
+
+#' @export
+summary.bimm_object <- function(object, ...){
+
+  cat("Binary mixed model predicting", object$colname_outcome)
+
+  cat("\n\n----- ML model: ----- \n\n")
+
+  cat("formula: ",
+      trimws(deparse(object$formula_ml)),
+      "\n",
+      sep = '')
+
+  print(object$model_ml)
+
+  cat("\n\n----- Mixed effects regression formula: ----- \n\n",
+      trimws(deparse(object$formula_mer)),
+      "\n\n",
+      sep = '')
+
+  print(summary(object$model_mer))
+
+  cat("\n\n----- Model history: ----- \n\n")
+  print(object$history)
+
+}

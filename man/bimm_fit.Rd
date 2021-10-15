@@ -9,6 +9,7 @@ bimm_fit(
   formula,
   verbose,
   n_iteration,
+  epsilon = 0.01,
   fun_model_ml = NULL,
   fun_model_mer = NULL,
   fun_pred_ml = NULL,
