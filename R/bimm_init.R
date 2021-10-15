@@ -37,9 +37,9 @@ bimm_init <- function(data_train,
   if(is.null(fun_model_mer))
     fun_model_mer <- function(formula, data_train){
 
-      lme4::glmer(formula = formula,
-                  data = data_train,
-                  family = stats::binomial)
+      blme::bglmer(formula = formula,
+                   data = data_train,
+                   family = stats::binomial)
 
     }
 

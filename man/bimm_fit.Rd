@@ -100,7 +100,7 @@ are made using only the machine learning model.
 }
 \examples{
 
-bimm_fit(data = hospital,
+bimm_fit(data = hospital[1:1000, ],
          formula = remission ~ . + (1 | DID),
          verbose = TRUE,
          n_iteration = 2)
