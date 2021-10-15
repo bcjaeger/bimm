@@ -22,7 +22,8 @@ Imports:
     lme4,
     ranger,
     data.table,
-    blme
+    blme,
+    statmod
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends: 
