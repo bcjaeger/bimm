@@ -3,3 +3,4 @@
 S3method(print,bimm_object)
 export(bimm_cv)
 export(bimm_fit)
+export(bimm_predict)
