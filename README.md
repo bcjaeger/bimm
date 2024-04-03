@@ -27,7 +27,7 @@ install_github("bcjaeger/bimm")
 
 ## Example
 
-The bimm packages requires binary, repeated/clustered outcomes and complete data (i.e., no missing values). 
+The `bimm` packages requires binary, repeated/clustered outcomes and complete data (i.e., no missing values). 
 
 ``` r
 library(bimm)
