@@ -17,7 +17,7 @@ There are a few differences in the bimm package from the papers. First, bimm use
 
 ## Installation
 
-You can install the released version of bimm from
+You can install the released version of `bimm` from
 [GitHub](https://github.com/) with:
 
 ``` r
