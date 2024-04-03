@@ -13,7 +13,7 @@ We have investigated BiMM with random forest in a method called BiMM forest. BiM
 
 We have a second paper that includes variable selection as a pre-step for the BiMM forest method: Speiser, Jaime Lynn. "A random forest method with feature selection for developing medical prediction models with clustered and longitudinal data." Journal of biomedical informatics 117 (2021): 103763. <https://www.sciencedirect.com/science/article/pii/S1532046421000927>
 
-There are a few differences in the bimm package from the papers. First, bimm uses ranger to employ random forest, whereas our original BiMM forest method used the R package randomForest. We did this to increase computational efficiency. Second, the bimm package only includes one iteration and H3 updates. We did not include H1 or H2 updating functions in the bimm package, as they did not seem to improve performance compared to one iteration or H3. Third, we do not include code for variable selection in the bimm package, as these can be done as a pre-step. Fourth, we note that we previously developed BiMM tree, a decision tree method with the BiMM algorithm, but this is not included in the package due to its worse perforamnce compared to BiMM forest.  
+There are a few differences in the `bimm` package from the papers. First, `bimm` uses ranger to employ random forest, whereas our original BiMM forest method used the R package randomForest. We did this to increase computational efficiency. Second, the `bimm` package only includes one iteration and H3 updates. We did not include H1 or H2 updating functions in the `bimm` package, as they did not seem to improve performance compared to one iteration or H3. Third, we do not include code for variable selection in the `bimm` package, as these can be done as a pre-step. Fourth, we note that we previously developed BiMM tree, a decision tree method with the BiMM algorithm, but this is not included in the package due to its worse perforamnce compared to BiMM forest.  
 
 ## Installation
 
@@ -33,7 +33,7 @@ The `bimm` packages requires binary, repeated/clustered outcomes and complete da
 library(bimm)
 ```
 
-We use the hospital dataset in the bimm package and split it into training and testing data by patient ID (DID). 
+We use the hospital dataset in the `bimm` package and split it into training and testing data by patient ID (DID). 
 
 ``` r
 data('hospital', package = 'bimm')
