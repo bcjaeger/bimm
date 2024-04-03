@@ -7,49 +7,70 @@
 
 <!-- badges: end -->
 
-The goal of bimm is to …
+The goal of `bimm` is to provide an alternative modeling framework for generalized linear mixed models (GLMMs) for binary outcomes. BiMM stands for Binary Mixed Model and the algorithm can be used in conjunction with any type of classifier that produces a predicted probability. BiMM is analogous to the Expectation-Maximization algorithm. In the first step, a classifier is used to predict the binary outcome (ignoring clustering) and the predicted probability is then included in a Bayesian GLMM to account for clustering. In the second step, the predicted probability from the Bayesian GLMM is added to the binary outcome and a split function is applied to update the outcome as a binary variable. The first and second step are repeated until the posterior log likelihood from the Bayesian GLMM is less than a specified tolerance value. Alternatively, one iteration could be used in the BiMM framework (i.e. the first and second step are employed only once and no iterations are repeated). Predictions for observations included in the training data are made using the mixed effects regression model. Predictions for observations not in the training data (i.e., the test data) are made using only the classifier.
+
+We have investigated BiMM with random forest in a method called BiMM forest. BiMM forest is a random forest method for modeling clustered and longitudinal binary outcomes. The paper can be found here: <https://www.sciencedirect.com/science/article/pii/S0169743918304362>. Full citation: Speiser, Jaime Lynn, Bethany J. Wolf, Dongjun Chung, Constantine J. Karvellas, David G. Koch, and Valerie L. Durkalski. "BiMM forest: A random forest method for modeling clustered and longitudinal binary outcomes." Chemometrics and Intelligent Laboratory Systems 185 (2019): 122-134.
+
+We have a second paper that includes variable selection as a pre-step for the BiMM forest method: Speiser, Jaime Lynn. "A random forest method with feature selection for developing medical prediction models with clustered and longitudinal data." Journal of biomedical informatics 117 (2021): 103763. <https://www.sciencedirect.com/science/article/pii/S1532046421000927>
+
+There are a few differences in the bimm package from the papers. First, bimm uses ranger to employ random forest, whereas our original BiMM forest method used the R package randomForest. We did this to increase computational efficiency. Second, the bimm package only includes one iteration and H3 updates. We did not include H1 or H2 updating functions in the bimm package, as they did not seem to improve performance compared to one iteration or H3. Third, we do not include code for variable selection in the bimm package, as these can be done as a pre-step. Fourth, we note that we previously developed BiMM tree, a decision tree method with the BiMM algorithm, but this is not included in the package due to its worse perforamnce compared to BiMM forest.  
 
 ## Installation
 
-You can install the released version of bimm from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of `bimm` from
+[GitHub](https://github.com/) with:
 
 ``` r
-install.packages("bimm")
+library(devtools)
+install_github("bcjaeger/bimm")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+The `bimm` packages requires binary, repeated/clustered outcomes and complete data (i.e., no missing values). 
 
 ``` r
 library(bimm)
-## basic example code
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+We use the hospital dataset in the bimm package and split it into training and testing data by patient ID (DID). 
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+data('hospital', package = 'bimm')
+
+index_train <- sample(unique(hospital$DID), size = 250)
+
+data_train <- hospital[hospital$DID %in% index_train, ]
+
+data_test <- hospital[!(hospital$DID %in% index_train), ] 
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
+First, we fit BiMM forest models: a one iteration BiMM forest and a BiMM forest with updates. Using verbose = TRUE, the iterations will be printed out. We can also print and summarize the models. 
 
-You can also embed plots, for example:
+``` r
+#BiMM forest with one iteration
+model1 <- bimm_fit(data = data_train,test=data_test,
+                  formula = remission ~ . + (1 | DID),
+                  n_iteration = 1)
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+print(model1)
+summary(model1)
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+#BiMM forest with H3 updates
+model2 <- bimm_fit(data = data_train,test=data_test,
+                  formula = remission ~ . + (1 | DID),
+                  verbose = TRUE)
+
+print(model2)
+summary(model2)
+```
+
+We can use the BiMM forest model to obtain predictions for test datasets of two types (new subjects: new_sub, not included in the training data; or new observations, with other observations from the cluster included in the training data). Here, we show how to get predictions for new subjects. 
+
+``` r
+preds_test1<-bimm_predict(model1, new_data=data_test,type="new_sub")
+```
+
+These predictions can then be used to calculate performance metrics such as AUC, sensitivity, specificity, NPV, PPV, F1, Brier, calibration, etc. 
+
+
