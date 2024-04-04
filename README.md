@@ -49,7 +49,7 @@ First, we fit BiMM forest models: a one iteration BiMM forest and a BiMM forest 
 
 ``` r
 #BiMM forest with one iteration
-model1 <- bimm_fit(data = data_train,test=data_test,
+model1 <- bimm_fit(data = data_train,
                   formula = remission ~ . + (1 | DID),
                   n_iteration = 1)
 
@@ -57,7 +57,7 @@ print(model1)
 summary(model1)
 
 #BiMM forest with H3 updates
-model2 <- bimm_fit(data = data_train,test=data_test,
+model2 <- bimm_fit(data = data_train,
                   formula = remission ~ . + (1 | DID),
                   verbose = TRUE)
 
