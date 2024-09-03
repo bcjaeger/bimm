@@ -29,7 +29,9 @@ bimm_predict <- function(object,
 
     predict(object = object$model_mer,
             newdata = cbind(tmp, new_data),
-            re.form = NULL)
+            type="response",
+            re.form = NULL,
+            allow.new.levels=TRUE)
 
   }
 
