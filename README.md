@@ -83,10 +83,10 @@ summary(preds_test1a)
 preds_test1b<-bimm_predict(model1, new_data=data_test_newobs,type='new_obs')
 summary(preds_test1b)
 
-preds_test1a<-bimm_predict(model2, new_data=data_test_newsubj,type='new_sub')
+preds_test2a<-bimm_predict(model2, new_data=data_test_newsubj,type='new_sub')
 summary(preds_test2a)
 
-preds_test1b<-bimm_predict(model2, new_data=data_test_newobs,type='new_obs')
+preds_test2b<-bimm_predict(model2, new_data=data_test_newobs,type='new_obs')
 summary(preds_test2b)
 ```
 
