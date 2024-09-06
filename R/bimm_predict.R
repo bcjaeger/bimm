@@ -26,10 +26,10 @@ bimm_predict <- function(object,
 
   if(type == 'new_obs'){
 
-    tmp <- data.frame(._x_. = p$predictions[, 2, drop=TRUE])
+    test_MLprob <- data.frame(._x_. = p$predictions[, 2, drop=TRUE])
 
     predict(object = object$model_mer,
-            newdata = cbind(tmp, new_data),
+            newdata = cbind(test_MLprob, new_data),
             type="response",
             re.form = NULL,
             allow.new.levels=TRUE)
