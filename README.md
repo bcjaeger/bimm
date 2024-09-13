@@ -33,23 +33,32 @@ The `bimm` packages requires binary, repeated/clustered outcomes and complete da
 library(bimm)
 ```
 
-We use the hospital dataset in the `bimm` package and split it into training and testing data by patient ID (DID). 
+We use the hospital dataset in the `bimm` package and split it into training and testing data by patient ID (DID) for test_newsubj and testing data for the last observation for each patient for test_newobs. 
 
 ``` r
 data('hospital', package = 'bimm')
 
 index_train <- sample(unique(hospital$DID), size = 250)
 
-data_train <- hospital[hospital$DID %in% index_train, ]
+data_trainall <- hospital[hospital$DID %in% index_train, ]
 
-data_test <- hospital[!(hospital$DID %in% index_train), ] 
+data_test_newobs<-data_trainall[!duplicated(data_trainall$DID),]
+
+data_train<-data_trainall[duplicated(data_trainall$DID),]
+
+data_test_newsubj <- hospital[!(hospital$DID %in% index_train), ]
+
+dim(data_train)
+dim(data_test_newsubj)
+dim(data_test_newobs)
+
 ```
 
 First, we fit BiMM forest models: a one iteration BiMM forest and a BiMM forest with updates. Using verbose = TRUE, the iterations will be printed out. We can also print and summarize the models. 
 
 ``` r
 #BiMM forest with one iteration
-model1 <- bimm_fit(data = data_train,test=data_test,
+model1 <- bimm_fit(data = data_train,
                   formula = remission ~ . + (1 | DID),
                   n_iteration = 1)
 
@@ -57,7 +66,7 @@ print(model1)
 summary(model1)
 
 #BiMM forest with H3 updates
-model2 <- bimm_fit(data = data_train,test=data_test,
+model2 <- bimm_fit(data = data_train,
                   formula = remission ~ . + (1 | DID),
                   verbose = TRUE)
 
@@ -65,10 +74,20 @@ print(model2)
 summary(model2)
 ```
 
-We can use the BiMM forest model to obtain predictions for test datasets of two types (new subjects: new_sub, not included in the training data; or new observations, with other observations from the cluster included in the training data). Here, we show how to get predictions for new subjects. 
+We can use the BiMM forest model to obtain predictions for test datasets of two types (new subjects: new_sub, not included in the training data; or new observations, with other observations from the cluster included in the training data). Here, we show how to get predictions for new subjects and for new observations of subjects included in the training data. 
 
 ``` r
-preds_test1<-bimm_predict(model1, new_data=data_test,type="new_sub")
+preds_test1a<-bimm_predict(model1, new_data=data_test_newsubj,type='new_sub')
+summary(preds_test1a)
+
+preds_test1b<-bimm_predict(model1, new_data=data_test_newobs,type='new_obs')
+summary(preds_test1b)
+
+preds_test2a<-bimm_predict(model2, new_data=data_test_newsubj,type='new_sub')
+summary(preds_test2a)
+
+preds_test2b<-bimm_predict(model2, new_data=data_test_newobs,type='new_obs')
+summary(preds_test2b)
 ```
 
 These predictions can then be used to calculate performance metrics such as AUC, sensitivity, specificity, NPV, PPV, F1, Brier, calibration, etc. 
